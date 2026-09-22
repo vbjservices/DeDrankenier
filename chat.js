@@ -23,7 +23,7 @@ const CHATBOT_CONFIG = {
   identity: { site: location.hostname, path: location.pathname },
 
   watermark: {
-    image: "./Assets/plastic_molecules1.png",
+    image: "./Assets/chatbot_background_silhouette.png",
     mode: "center",
     text: "",
     opacity: 0.6
