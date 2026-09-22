@@ -1,7 +1,7 @@
 /* ====== CONFIG ====== */
 const CHATBOT_CONFIG = {
   webhookUrl: "https://n8n1.vbservices.org/webhook/167a3d1c-e104-4a41-8241-941148302b51/chat",
-  title: "De Zakkenspecialist Assistent",
+  title: "De Drank Adviseur",
 
   bubbleIconClosed: "./Assets/ChatImage.png",
   bubbleIconOpen:   "./Assets/dropDown.png",
