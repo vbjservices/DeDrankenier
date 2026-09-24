@@ -3,7 +3,7 @@
 This folder is self-contained. Copy the complete `chatbot` folder to the website and add this just before the closing `</body>` tag:
 
 ```html
-<script src="/chatbot/widget.js?v=5" defer></script>
+<script src="/chatbot/widget.js?v=9" defer></script>
 ```
 
 The widget uses Shadow DOM, so existing WordPress/theme styles cannot accidentally restyle it and the widget styles cannot leak into the website.
@@ -20,7 +20,7 @@ Place configuration before the script tag:
     openByDefault: false
   };
 </script>
-<script src="/chatbot/widget.js?v=5" defer></script>
+<script src="/chatbot/widget.js?v=9" defer></script>
 ```
 
 ## Product cards

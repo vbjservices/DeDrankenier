@@ -17,6 +17,7 @@
     openByDefault: false,
     requestTimeoutMs: 15000,
     avatarUrl: widgetAssetUrl("assets/chat-avatar.png"),
+    ctaImageUrl: widgetAssetUrl("assets/CTA.png"),
     welcomeText: "Hoi! Waar kan ik je mee helpen?\n\nIk kan je adviseren over wijnen, speciaalbieren en gedistilleerd, of je vragen beantwoorden over bestellingen, levering en meer.",
     quickActions: [
       { label: "Wijnadvies", prompt: "Ik wil graag wijnadvies.", icon: "wine" },
@@ -70,6 +71,12 @@
     shell.className = "dd-shell";
     shell.dataset.position = config.position === "left" ? "left" : "right";
     shell.innerHTML = `
+      <aside class="dd-cta" aria-label="Chat met onze drankadviseur">
+        <button class="dd-cta-open" type="button" aria-label="Open de drankadviseur">
+          <img src="${escapeAttribute(config.ctaImageUrl)}" alt="Chat met onze drankadviseur" />
+        </button>
+        <button class="dd-cta-close" type="button" aria-label="Verberg deze melding">${icons.close}</button>
+      </aside>
       <section class="dd-window" id="ddWindow" role="dialog" aria-modal="false" aria-labelledby="ddTitle" aria-describedby="ddSubtitle">
         <header class="dd-header">
           <div class="dd-header-avatar"><img src="${escapeAttribute(config.avatarUrl)}" alt="" /></div>
@@ -97,6 +104,9 @@
 
     const ui = {
       shell,
+      cta: shadow.querySelector(".dd-cta"),
+      ctaOpen: shadow.querySelector(".dd-cta-open"),
+      ctaClose: shadow.querySelector(".dd-cta-close"),
       window: shadow.querySelector(".dd-window"),
       launcher: shadow.querySelector(".dd-launcher"),
       close: shadow.querySelector(".dd-close"),
@@ -108,8 +118,14 @@
 
     sessionId = getSessionId();
     addMessage(ui, "bot", config.welcomeText, { actions: config.quickActions, timestamp: false });
+    initializeCta(ui);
 
     ui.launcher.addEventListener("click", () => setOpen(ui, !ui.window.classList.contains("is-open")));
+    ui.ctaOpen.addEventListener("click", () => setOpen(ui, true));
+    ui.ctaClose.addEventListener("click", (event) => {
+      event.stopPropagation();
+      dismissCta(ui);
+    });
     ui.close.addEventListener("click", () => setOpen(ui, false));
     ui.form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -132,6 +148,10 @@
     shadow.addEventListener("error", (event) => {
       const image = event.target;
       if (!(image instanceof HTMLImageElement)) return;
+      if (!image.classList.contains("dd-product-image")) {
+        if (image.closest(".dd-cta")) ui.cta.hidden = true;
+        return;
+      }
       const fallback = image.dataset.ddFallbackSrc;
       if (fallback && image.src !== fallback) {
         image.src = fallback;
@@ -151,10 +171,19 @@
     ui.launcher.setAttribute("aria-expanded", String(open));
     ui.launcher.setAttribute("aria-label", open ? "Chat sluiten" : "Chat openen");
     if (open) {
+      dismissCta(ui);
       window.setTimeout(() => ui.input.focus(), 180);
     } else {
       ui.launcher.focus();
     }
+  }
+
+  function initializeCta(ui) {
+    ui.cta.hidden = config.openByDefault || !config.ctaImageUrl;
+  }
+
+  function dismissCta(ui) {
+    ui.cta.hidden = true;
   }
 
   async function sendMessage(ui, text) {

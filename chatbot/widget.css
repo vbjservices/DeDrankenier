@@ -28,7 +28,49 @@ button { -webkit-tap-highlight-color: transparent; }
 
 .dd-shell[data-position="left"] { right: auto; left: max(20px, env(safe-area-inset-left)); }
 
+.dd-cta {
+  position: absolute;
+  right: 30px;
+  bottom: 20px;
+  width: 205px;
+  filter: drop-shadow(0 10px 18px rgba(42, 15, 22, .2));
+  transform-origin: right bottom;
+  animation: dd-cta-in .35s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.dd-shell[data-position="left"] .dd-cta {
+  right: auto;
+  left: -18px;
+  transform-origin: left bottom;
+}
+
+.dd-cta[hidden] { display: none; }
+.dd-cta-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.dd-cta-open img { display: block; width: 100%; height: auto; }
+.dd-cta-close {
+  position: absolute;
+  top: 18px;
+  right: 13px;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(101, 19, 40, .18);
+  border-radius: 50%;
+  color: var(--dd-wine);
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 3px 9px rgba(42, 15, 22, .16);
+  cursor: pointer;
+}
+.dd-cta-close:hover { color: #fff; background: var(--dd-wine); }
+.dd-cta-close svg { width: 15px; height: 15px; }
+.dd-cta-open:focus-visible,
+.dd-cta-close:focus-visible { outline: 3px solid rgba(101, 19, 40, .3); outline-offset: 3px; }
+@keyframes dd-cta-in { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
 .dd-launcher {
+  position: relative;
   width: 64px;
   height: 64px;
   display: grid;
@@ -53,10 +95,44 @@ button { -webkit-tap-highlight-color: transparent; }
   outline-offset: 3px;
 }
 
-.dd-launcher img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.dd-launcher .dd-launcher-close { display: none; color: #fff; }
-.dd-launcher[aria-expanded="true"] img { display: none; }
-.dd-launcher[aria-expanded="true"] .dd-launcher-close { display: block; }
+.dd-launcher img,
+.dd-header-avatar img,
+.dd-message-avatar img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 113%;
+  height: 113%;
+  max-width: none;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  transform: translate(-50%, -50%);
+}
+
+.dd-launcher img {
+  opacity: 1;
+  transition: opacity .18s ease, transform .22s cubic-bezier(.2, .8, .2, 1);
+}
+
+.dd-launcher .dd-launcher-close {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(.78) rotate(-30deg);
+  transition: opacity .18s ease, transform .22s cubic-bezier(.2, .8, .2, 1);
+}
+
+.dd-launcher-close svg { width: 27px; height: 27px; }
+.dd-launcher[aria-expanded="true"] img { opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+.dd-launcher[aria-expanded="true"] .dd-launcher-close { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
 
 .dd-window {
   position: absolute;
@@ -96,17 +172,17 @@ button { -webkit-tap-highlight-color: transparent; }
 
 .dd-header-avatar,
 .dd-message-avatar {
+  position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 5px;
+  padding: 0;
   flex: 0 0 auto;
   border-radius: 50%;
   background: var(--dd-cream);
 }
 
 .dd-header-avatar { width: 58px; height: 58px; }
-.dd-header-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .dd-heading { min-width: 0; }
 .dd-title { margin: 0; color: #fff; font-size: 1.25rem; font-weight: 700; line-height: 1.2; }
 .dd-subtitle { margin: 4px 0 0; color: rgba(255,255,255,.86); font-size: .92rem; line-height: 1.25; }
@@ -139,7 +215,6 @@ button { -webkit-tap-highlight-color: transparent; }
 .dd-message-row { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 16px; }
 .dd-message-row.is-user { justify-content: flex-end; }
 .dd-message-avatar { width: 42px; height: 42px; margin-top: 2px; }
-.dd-message-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .dd-message-column { min-width: 0; max-width: calc(100% - 52px); }
 .dd-message-row.is-user .dd-message-column { max-width: 86%; display: flex; flex-direction: column; align-items: flex-end; }
 
@@ -302,6 +377,8 @@ button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 520px) {
   .dd-shell { right: 10px; bottom: 10px; }
   .dd-shell[data-position="left"] { left: 10px; right: auto; }
+  .dd-cta { right: -8px; bottom: 47px; width: 185px; }
+  .dd-shell[data-position="left"] .dd-cta { right: auto; left: -8px; }
   .dd-window {
     position: fixed;
     inset: 8px 8px 82px;
